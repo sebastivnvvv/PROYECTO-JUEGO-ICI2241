@@ -108,6 +108,7 @@ public class GameLluvia extends ApplicationAdapter {
 		
 	}
 	private void reiniciarJuego() {
+		tiempoSobrevivido = 0f;
 		gameOver = false;
 		Sound hurtSound = Gdx.audio.newSound(Gdx.files.internal("hurt.ogg"));
 		Texture texSeco = new Texture(Gdx.files.internal("joven_seco.png"));
@@ -116,6 +117,13 @@ public class GameLluvia extends ApplicationAdapter {
 		Texture texPelos = new Texture(Gdx.files.internal("joven_pelos_parados.png"));
 		player = new Player(texSeco, texMojado1, texMojado2, texPelos, hurtSound);
 		player.crear();
+		Texture texViento = new Texture(Gdx.files.internal("viento.png"));
+		Texture texGota = new Texture(Gdx.files.internal("drop.png"));
+		Sound dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
+		Music rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
+		lluvia.destruir();
+		lluvia = new Lluvia(texViento, texGota, dropSound, rainMusic);
+		lluvia.crear();
 	}
 	@Override
 	public void dispose () {
