@@ -1,0 +1,10 @@
+drop.png
+drop.wav
+dropBad.png
+hurt.ogg
+joven_mojado1.png
+joven_mojado2.png
+joven_pelos_parados.png
+joven_seco.png
+rain.mp3
+viento.png

@@ -14,18 +14,23 @@ public class Lluvia {
 	private Array<Rectangle> rainDropsPos;
 	private Array<Integer> rainDropsType;
     private long lastDropTime;
-    private Texture gotaBuena;
-    private Texture gotaMala;
+    private Texture texViento;
+    private Texture texGota;
     private Sound dropSound;
     private Music rainMusic;
 	   
-	public Lluvia(Texture gotaBuena, Texture gotaMala, Sound ss, Music mm) {
+	public Lluvia(Texture texViento, Texture texGota, Sound ss, Music mm) {
 		rainMusic = mm;
 		dropSound = ss;
-		this.gotaBuena = gotaBuena;
-		this.gotaMala = gotaMala;
+		this.texViento = texViento;
+		this.texGota = texGota;
 	}
-	
+
+	public void limpiarPantalla() {
+		rainDropsPos.clear();
+		rainDropsType.clear();
+	}
+
 	public void crear() {
 		rainDropsPos = new Array<Rectangle>();
 		rainDropsType = new Array<Integer>();
@@ -43,41 +48,46 @@ public class Lluvia {
 	      raindrop.height = 64;
 	      rainDropsPos.add(raindrop);
 	      // ver el tipo de gota
-	      if (MathUtils.random(1,10)<3)	    	  
+	      if (MathUtils.random(1, 10)< 2)
 	         rainDropsType.add(1);
 	      else 
 	    	 rainDropsType.add(2);
 	      lastDropTime = TimeUtils.nanoTime();
 	   }
 	
-   public void actualizarMovimiento(Tarro tarro) { 
-	   // generar gotas de lluvia 
-	   if(TimeUtils.nanoTime() - lastDropTime > 100000000) crearGotaDeLluvia();
-	  
-	   
-	   // revisar si las gotas cayeron al suelo o chocaron con el tarro
-	   for (int i=0; i < rainDropsPos.size; i++ ) {
-		  Rectangle raindrop = rainDropsPos.get(i);
-	      raindrop.y -= 300 * Gdx.graphics.getDeltaTime();
-	      //cae al suelo y se elimina
-	      if(raindrop.y + 64 < 0) {
-	    	  rainDropsPos.removeIndex(i); 
-	    	  rainDropsType.removeIndex(i);
-	      }
-	      if(raindrop.overlaps(tarro.getArea())) { //la gota choca con el tarro
-	    	if(rainDropsType.get(i)==1) { // gota dañina
-	    	  tarro.dañar();
-	    	  
-	    	  rainDropsPos.removeIndex(i);
-	          rainDropsType.removeIndex(i);
-	      	}else { // gota a recolectar
-	    	  tarro.sumarPuntos(10);
-	          dropSound.play();
-	          rainDropsPos.removeIndex(i);
-	          rainDropsType.removeIndex(i);
-	      	}
-	      }
-	   }   
+   public void actualizarMovimiento(Player player, float tiempoJuego) {
+	   // La frecuencia de aparición también se vuelve un poco más rápida con el tiempo
+	   long intervalo = Math.max(200000000L, 700000000L - (long)(tiempoJuego * 10000000L));
+
+	   if(TimeUtils.nanoTime() - lastDropTime > intervalo) {
+		   crearGotaDeLluvia();
+	   }
+
+	   for (int i = 0; i < rainDropsPos.size; i++) {
+		   Rectangle raindrop = rainDropsPos.get(i);
+
+		   // VELOCIDAD PROGRESIVA: Base de 250 + el tiempo jugado multiplica la velocidad
+		   float velocidad = 250 + (tiempoJuego * 10);
+		   raindrop.y -= velocidad * Gdx.graphics.getDeltaTime();
+
+		   if(raindrop.y + 64 < 0) {
+			   rainDropsPos.removeIndex(i);
+			   rainDropsType.removeIndex(i);
+		   }
+
+		   if(raindrop.overlaps(player.getArea())) {
+			   if(rainDropsType.get(i) == 1) { // Es el Viento
+				   player.sumarViento();
+				   dropSound.play();
+				   rainDropsPos.removeIndex(i);
+				   rainDropsType.removeIndex(i);
+			   } else { // Es la Gota
+				   player.dañar();
+				   rainDropsPos.removeIndex(i);
+				   rainDropsType.removeIndex(i);
+			   }
+		   }
+	   }
    }
    
    public void actualizarDibujoLluvia(SpriteBatch batch) { 
@@ -85,9 +95,9 @@ public class Lluvia {
 	  for (int i=0; i < rainDropsPos.size; i++ ) {
 		  Rectangle raindrop = rainDropsPos.get(i);
 		  if(rainDropsType.get(i)==1) // gota dañina
-	         batch.draw(gotaMala, raindrop.x, raindrop.y); 
+	         batch.draw(texViento, raindrop.x, raindrop.y, raindrop.width, raindrop.height);
 		  else
-			 batch.draw(gotaBuena, raindrop.x, raindrop.y); 
+			 batch.draw(texGota, raindrop.x, raindrop.y, raindrop.width, raindrop.height);
 	   }
    }
    public void destruir() {
