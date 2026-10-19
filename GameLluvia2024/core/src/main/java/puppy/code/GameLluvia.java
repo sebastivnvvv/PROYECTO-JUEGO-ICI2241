@@ -70,12 +70,14 @@ public class GameLluvia extends ApplicationAdapter {
 
 		if (player.getVidas() <= 0){
 			gameOver = true;
+			GestorPuntajes.getInstancia().guardarTiempo(tiempoSobrevivido);
 		}
 		if (!gameOver ){
 			tiempoSobrevivido += Gdx.graphics.getDeltaTime();
 
 			// Dibujar textos en pantalla (Tiempo y Vidas y Cargas de Viento)
 			font.draw(batch, "Tiempo: " + (int)tiempoSobrevivido + "s", 5, 475);
+			font.draw(batch, "Récord: " + (int)GestorPuntajes.getInstancia().getMejorTiempo() + "s", 5, 450);
 			font.draw(batch, "Vidas: " + player.getVidas(), 350, 475);
 			font.draw(batch, "Vientos (ESPACIO): " + player.getCargasViento() + "/3", 600, 475);
 
@@ -96,6 +98,7 @@ public class GameLluvia extends ApplicationAdapter {
 		} else{
 			font.draw(batch, "¡GAME OVER!", 350, 280);
 			font.draw(batch, "Sobreviviste: " + (int)tiempoSobrevivido + " segundos", 310, 240);
+			font.draw(batch, "Mejor Récord: " + (int)GestorPuntajes.getInstancia().getMejorTiempo() + "s", 310, 210);
 			font.draw(batch, "Presiona ENTER para reiniciar", 290, 200);
 
 			// Opcional: Reiniciar al presionar ENTER
