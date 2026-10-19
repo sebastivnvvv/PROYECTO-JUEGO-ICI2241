@@ -98,7 +98,7 @@ public class GameLluvia extends ApplicationAdapter {
 		} else{
 			font.draw(batch, "¡GAME OVER!", 350, 280);
 			font.draw(batch, "Sobreviviste: " + (int)tiempoSobrevivido + " segundos", 310, 240);
-			font.draw(batch, "Mejor Récord: " + (int)GestorPuntajes.getInstancia().getMejorTiempo() + "s", 310, 1900);
+			font.draw(batch, "Mejor Récord: " + (int)GestorPuntajes.getInstancia().getMejorTiempo() + "s", 330, 210);
 			font.draw(batch, "Presiona ENTER para reiniciar", 290, 200);
 
 			// Opcional: Reiniciar al presionar ENTER
