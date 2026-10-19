@@ -40,7 +40,13 @@ public class Lluvia {
         if (MathUtils.random(1, 10) < 2) {
             gotas.add(new Gota(x, 480, Gota.VIENTO, new MovimientoRecto()));
         } else {
-            gotas.add(new Gota(x, 480, Gota.AGUA, new MovimientoZigzag(40f, 5f, 1f)));
+            EstrategiaMovimiento movimiento;
+            if (MathUtils.randomBoolean(0.5f)) { 
+                movimiento = new MovimientoRecto(); // 50% cae recto
+            } else {
+                movimiento = new MovimientoZigzag(40f, 5f, 1f); // 50% cae en zigzag
+            }
+            gotas.add(new Gota(x, 480, Gota.AGUA, movimiento));
         }
         lastDropTime = TimeUtils.nanoTime();
     }
