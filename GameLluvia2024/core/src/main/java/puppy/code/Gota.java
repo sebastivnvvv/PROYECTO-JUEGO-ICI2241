@@ -21,9 +21,18 @@ public abstract class Gota {
     public boolean salioDePantalla() {
         return area.y + 64 < 0;
     }
+    
+    public final void procesarColision(Player player) {
+        aplicarEfecto(player);
+        reproducirSonido();
+    }
+
+    protected void reproducirSonido() {
+        // por defecto: sin sonido propio
+    }
 
     /** Efecto que produce la gota sobre el jugador al colisionar. */
-    public abstract void aplicarEfecto(Player player);
+    protected abstract void aplicarEfecto(Player player);
 
     public Rectangle getArea() {
     	return area; 

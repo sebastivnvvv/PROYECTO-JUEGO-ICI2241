@@ -68,7 +68,7 @@ public class Lluvia {
             if (gota.salioDePantalla()) {
                 gotas.removeIndex(i);
             } else if (gota.getArea().overlaps(player.getArea())) {
-            	gota.aplicarEfecto(player);
+            	gota.procesarColision(player);
             	gotas.removeIndex(i);
             }
         }

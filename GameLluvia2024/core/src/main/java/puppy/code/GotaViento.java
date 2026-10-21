@@ -12,8 +12,12 @@ public class GotaViento extends Gota {
     }
 
     @Override
-    public void aplicarEfecto(Player player) {
+    protected void aplicarEfecto(Player player) {
         player.sumarViento();
+    }
+
+    @Override
+    protected void reproducirSonido() {
         sonido.play();
     }
 
