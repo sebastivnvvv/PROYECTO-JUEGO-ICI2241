@@ -1,18 +1,16 @@
 package puppy.code;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Gota {
-    public static final int VIENTO = 1;
-    public static final int AGUA = 2;
-
+public abstract class Gota {
     private final Rectangle area;
-    private final int tipo;
+    private final Texture textura;
     private final EstrategiaMovimiento movimiento;
 
-    public Gota(float x, float y, int tipo, EstrategiaMovimiento movimiento) {
+    protected Gota(float x, float y, Texture textura, EstrategiaMovimiento movimiento) {
         this.area = new Rectangle(x, y, 64, 64);
-        this.tipo = tipo;
+        this.textura = textura;
         this.movimiento = movimiento;
     }
 
@@ -24,11 +22,16 @@ public class Gota {
         return area.y + 64 < 0;
     }
 
-    public Rectangle getArea() {
-        return area;
-    }
+    /** Efecto que produce la gota sobre el jugador al colisionar. */
+    public abstract void aplicarEfecto(Player player);
 
-    public int getTipo() {
-        return tipo;
+    public Rectangle getArea() {
+    	return area; 
     }
+    public Texture getTextura() { 
+    	return textura; 
+    }
+    public EstrategiaMovimiento getMovimiento() { 
+    	return movimiento; 
+	}
 }

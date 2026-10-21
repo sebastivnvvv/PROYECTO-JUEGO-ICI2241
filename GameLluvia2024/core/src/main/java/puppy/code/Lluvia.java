@@ -38,7 +38,7 @@ public class Lluvia {
     private void crearGotaDeLluvia() {
         float x = MathUtils.random(0, 800 - 64);
         if (MathUtils.random(1, 10) < 2) {
-            gotas.add(new Gota(x, 480, Gota.VIENTO, new MovimientoRecto()));
+        	gotas.add(new GotaViento(x, 480, texViento, new MovimientoRecto(), dropSound));
         } else {
             EstrategiaMovimiento movimiento;
             if (MathUtils.randomBoolean(0.5f)) { 
@@ -46,7 +46,7 @@ public class Lluvia {
             } else {
                 movimiento = new MovimientoZigzag(40f, 5f, 1f); // 50% cae en zigzag
             }
-            gotas.add(new Gota(x, 480, Gota.AGUA, movimiento));
+            gotas.add(new GotaAgua(x, 480, texGota, movimiento));
         }
         lastDropTime = TimeUtils.nanoTime();
     }
@@ -68,21 +68,15 @@ public class Lluvia {
             if (gota.salioDePantalla()) {
                 gotas.removeIndex(i);
             } else if (gota.getArea().overlaps(player.getArea())) {
-                if (gota.getTipo() == Gota.VIENTO) {
-                    player.sumarViento();
-                    dropSound.play();
-                } else {
-                    player.dañar();
-                }
-                gotas.removeIndex(i);
+            	gota.aplicarEfecto(player);
+            	gotas.removeIndex(i);
             }
         }
     }
 
     public void actualizarDibujoLluvia(SpriteBatch batch) {
         for (Gota gota : gotas) {
-            Texture tex = (gota.getTipo() == Gota.VIENTO) ? texViento : texGota;
-            batch.draw(tex, gota.getArea().x, gota.getArea().y,
+            batch.draw(gota.getTextura(), gota.getArea().x, gota.getArea().y,
                     gota.getArea().width, gota.getArea().height);
         }
     }
