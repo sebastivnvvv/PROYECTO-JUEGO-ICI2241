@@ -37,17 +37,24 @@ public class Lluvia {
 
     private void crearGotaDeLluvia() {
         float x = MathUtils.random(0, 800 - 64);
+        GotaBuilder builder = new GotaBuilder().posicion(x, 480);
         if (MathUtils.random(1, 10) < 2) {
-        	gotas.add(new GotaViento(x, 480, texViento, new MovimientoRecto(), dropSound));
+            builder.tipo(TipoGota.VIENTO)
+                   .textura(texViento)
+                   .sonido(dropSound)
+                   .movimiento(new MovimientoRecto());
         } else {
             EstrategiaMovimiento movimiento;
-            if (MathUtils.randomBoolean(0.5f)) { 
-                movimiento = new MovimientoRecto(); // 50% cae recto
+            if (MathUtils.randomBoolean(0.5f)) {
+                movimiento = new MovimientoRecto();
             } else {
-                movimiento = new MovimientoZigzag(40f, 5f, 1f); // 50% cae en zigzag
+                movimiento = new MovimientoZigzag(40f, 5f, 1f);
             }
-            gotas.add(new GotaAgua(x, 480, texGota, movimiento));
+            builder.tipo(TipoGota.AGUA)
+                   .textura(texGota)
+                   .movimiento(movimiento);
         }
+        gotas.add(builder.build());
         lastDropTime = TimeUtils.nanoTime();
     }
 
