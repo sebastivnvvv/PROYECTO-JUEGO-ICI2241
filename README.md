@@ -2,17 +2,6 @@
 
 Juego 2D desarrollado en **Java** con el framework **libGDX** como proyecto de escritorio. El jugador debe sobrevivir a una lluvia de gotas, esquivando las gotas de agua y recogiendo objetos de viento para recuperar vidas y obtener una habilidad especial.
 
-## Contenido
-
-- [Características](#características)
-- [Controles](#controles)
-- [Cómo funciona el juego](#cómo-funciona-el-juego)
-- [Estructura del proyecto](#estructura-del-proyecto)
-- [Requisitos](#requisitos)
-- [Instalación y ejecución](#instalación-y-ejecución)
-- [Generar un ejecutable JAR](#generar-un-ejecutable-jar)
-- [Tecnologías y patrones de diseño](#tecnologías-y-patrones-de-diseño)
-
 ## Características
 
 - Movimiento horizontal del personaje mediante el teclado.
@@ -60,13 +49,6 @@ El récord se gestiona con `GestorPuntajes`. El récord se mantiene durante la e
 gradlew.bat lwjgl3:run
 ```
 
-**Linux o macOS:**
-
-```bash
-chmod +x gradlew
-./gradlew lwjgl3:run
-```
-
 Gradle descargará las dependencias necesarias y abrirá el juego. También puedes importar la carpeta `GameLluvia2024/` como proyecto Gradle en IntelliJ IDEA.
 
 ## Generar un ejecutable JAR
@@ -77,12 +59,6 @@ Desde la carpeta `GameLluvia2024/`, ejecuta:
 
 ```bat
 gradlew.bat lwjgl3:jar
-```
-
-**Linux o macOS:**
-
-```bash
-./gradlew lwjgl3:jar
 ```
 
 El JAR se genera en `lwjgl3/build/libs/`. Para ejecutarlo, utiliza una instalación compatible de Java:
@@ -101,9 +77,3 @@ El nombre exacto del archivo puede variar según la configuración de versión d
 - **Strategy:** `EstrategiaMovimiento` permite intercambiar el movimiento recto y el movimiento en zigzag.
 - **Builder:** `GotaBuilder` configura y construye gotas según su tipo, textura, sonido y estrategia de movimiento.
 - **Singleton:** `GestorPuntajes` ofrece una instancia compartida para administrar el récord.
-
-## Solución de problemas
-
-- **No se reconoce Java:** instala JDK 11 y verifica que `java -version` funcione en la terminal.
-- **Error al descargar dependencias:** comprueba tu conexión a Internet y vuelve a ejecutar el comando Gradle.
-- **No aparecen imágenes o sonidos:** ejecuta el proyecto desde Gradle y verifica que la carpeta `assets/` esté presente y contenga los recursos del juego.
