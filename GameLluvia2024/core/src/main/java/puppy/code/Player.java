@@ -131,6 +131,7 @@ public class Player {
 		texMojado1.dispose();
 		texMojado2.dispose();
 		texPelosParados.dispose();
+		sonidoHerido.dispose();
 	   }
 	
    public boolean estaHerido() {

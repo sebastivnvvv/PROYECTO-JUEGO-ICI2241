@@ -30,4 +30,7 @@ public class GestorPuntajes {
     public float getMejorTiempo() {
         return mejorTiempo;
     }
+    public void setMejorTiempo(float mejorTiempo) {
+        this.mejorTiempo = mejorTiempo;
+    }
 }
