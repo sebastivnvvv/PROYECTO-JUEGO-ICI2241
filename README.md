@@ -42,34 +42,6 @@ La clase `GameLluvia` inicializa los recursos, el jugador y la lluvia, y adminis
 
 El récord se gestiona con `GestorPuntajes`. El récord se mantiene durante la ejecución actual del juego; no se guarda en un archivo ni persiste al cerrar la aplicación.
 
-## Estructura del proyecto
-
-```text
-GameLluvia2024/
-├── assets/                 # Imágenes, sonidos y música
-├── core/
-│   └── src/main/java/puppy/code/
-│       ├── GameLluvia.java # Ciclo principal y estados del juego
-│       ├── Player.java     # Personaje, movimiento y vidas
-│       ├── Lluvia.java     # Aparición, actualización y dibujo de gotas
-│       ├── Gota.java       # Clase base abstracta de las gotas
-│       ├── GotaAgua.java   # Gota que daña al jugador
-│       ├── GotaViento.java # Gota que otorga viento y recupera vida
-│       ├── GotaBuilder.java# Construcción de gotas
-│       ├── TipoGota.java   # Tipos de gota
-│       ├── EstrategiaMovimiento.java
-│       ├── MovimientoRecto.java
-│       ├── MovimientoZigzag.java
-│       └── GestorPuntajes.java
-├── lwjgl3/
-│   └── src/main/java/      # Lanzador de escritorio
-├── build.gradle
-├── settings.gradle
-├── gradle.properties
-├── gradlew                 # Wrapper para Linux/macOS
-└── gradlew.bat             # Wrapper para Windows
-```
-
 ## Requisitos
 
 - **JDK 11** o compatible con la configuración Gradle del proyecto.
