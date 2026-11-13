@@ -6,9 +6,9 @@ import com.badlogic.gdx.math.Rectangle;
 public abstract class Gota {
     private final Rectangle area;
     private final Texture textura;
-    private final EstrategiaMovimiento movimiento;
+    private final ComportamientoGota movimiento;
 
-    protected Gota(float x, float y, Texture textura, EstrategiaMovimiento movimiento) {
+    protected Gota(float x, float y, Texture textura, ComportamientoGota movimiento) {
         this.area = new Rectangle(x, y, 64, 64);
         this.textura = textura;
         this.movimiento = movimiento;
@@ -40,7 +40,7 @@ public abstract class Gota {
     public Texture getTextura() { 
     	return textura; 
     }
-    public EstrategiaMovimiento getMovimiento() { 
+    public ComportamientoGota getMovimiento() {
     	return movimiento; 
 	}
 }

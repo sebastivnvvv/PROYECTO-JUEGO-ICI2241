@@ -44,15 +44,21 @@ public class Lluvia {
                    .sonido(dropSound)
                    .movimiento(new MovimientoRecto());
         } else {
-            EstrategiaMovimiento movimiento;
-            if (MathUtils.randomBoolean(0.5f)) {
+            ComportamientoGota movimiento;
+            float rand = MathUtils.random(); // un número entre 0 y 1
+
+            if (rand < 0.4f) {
                 movimiento = new MovimientoRecto();
+            } else if (rand < 0.8f) {
+                movimiento = new MovimientoZigzag(80f, 5f, 1f);
             } else {
-                movimiento = new MovimientoZigzag(40f, 5f, 1f);
+                // ¡Aquí entra tu movimiento mixto dinámico!
+                movimiento = new MovimientoMixto();
             }
+
             builder.tipo(TipoGota.AGUA)
-                   .textura(texGota)
-                   .movimiento(movimiento);
+                    .textura(texGota)
+                    .movimiento(movimiento);
         }
         gotas.add(builder.build());
         lastDropTime = TimeUtils.nanoTime();

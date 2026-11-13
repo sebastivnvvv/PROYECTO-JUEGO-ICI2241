@@ -3,7 +3,7 @@ package puppy.code;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
-public class MovimientoZigzag implements EstrategiaMovimiento {
+public class MovimientoZigzag implements ComportamientoGota {
     private final float amplitud;
     private final float frecuencia;
     private final float factorVelocidad;

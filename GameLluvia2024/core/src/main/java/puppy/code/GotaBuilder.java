@@ -9,19 +9,19 @@ public class GotaBuilder {
     private TipoGota tipo = TipoGota.AGUA;
     private Texture textura;
     private Sound sonido;
-    private EstrategiaMovimiento movimiento;
+    private ComportamientoGota movimiento;
 
     public GotaBuilder posicion(float x, float y) { this.x = x; this.y = y; return this; }
     public GotaBuilder tipo(TipoGota tipo) { this.tipo = tipo; return this; }
     public GotaBuilder textura(Texture textura) { this.textura = textura; return this; }
     public GotaBuilder sonido(Sound sonido) { this.sonido = sonido; return this; }
-    public GotaBuilder movimiento(EstrategiaMovimiento movimiento) { this.movimiento = movimiento; return this; }
+    public GotaBuilder movimiento(ComportamientoGota movimiento) { this.movimiento = movimiento; return this; }
 
     public Gota build() {
         if (textura == null) {
             throw new IllegalStateException("La gota necesita una textura");
         }
-        EstrategiaMovimiento mov = (movimiento != null) ? movimiento : new MovimientoRecto();
+        ComportamientoGota mov = (movimiento != null) ? movimiento : new MovimientoRecto();
 
         switch (tipo) {
             case VIENTO:

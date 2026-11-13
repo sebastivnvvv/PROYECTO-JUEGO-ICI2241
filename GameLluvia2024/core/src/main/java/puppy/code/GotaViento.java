@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 public class GotaViento extends Gota {
     private final Sound sonido;
 
-    public GotaViento(float x, float y, Texture textura, EstrategiaMovimiento movimiento, Sound sonido) {
+    public GotaViento(float x, float y, Texture textura, ComportamientoGota movimiento, Sound sonido) {
         super(x, y, textura, movimiento);
         this.sonido = sonido;
     }
