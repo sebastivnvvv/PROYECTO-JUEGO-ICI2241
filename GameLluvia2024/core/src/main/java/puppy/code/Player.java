@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Player {
-	// Variable estática para guardar la única instancia del jugador globalmente
 	private static Player instanciaActual;
 
 	private Rectangle area;
@@ -35,11 +34,10 @@ public class Player {
 		this.texPelosParados = texPelosParados;
 		this.sonidoHerido = ss;
 
-		// ¡Aquí guardamos la instancia automáticamente al crearse el jugador!
+		// Guardamos la instancia automáticamente al crearse el jugador
 		instanciaActual = this;
 	}
 
-	// Método estático para que cualquier clase (como MovimientoIman) pueda pedir el player
 	public static Player getInstancia() {
 		return instanciaActual;
 	}
@@ -78,9 +76,34 @@ public class Player {
 		return false;
 	}
 
+	public void modificarVidas(int cantidad) {
+		vidas = MathUtils.clamp(vidas + cantidad, 0, 3);
+	}
+
+	public void agregarCargasViento(int cantidad) {
+		cargasViento = MathUtils.clamp(cargasViento + cantidad, 0, 3);
+	}
+
+	public void activarHerido() {
+		herido = true;
+		tiempoHerido = tiempoHeridoMax;
+	}
+
+	public void setPelosParados(boolean pelosParados) {
+		this.pelosParados = pelosParados;
+	}
+
+	public boolean isPelosParados() {
+		return pelosParados;
+	}
+
+	public void reproducirSonidoHerido() {
+		sonidoHerido.play();
+	}
+
 	public void crear() {
 		area = new Rectangle();
-		area.x = 800 / 2 - 64 / 2; // Corregido el error de sintaxis del salto de línea
+		area.x = 800 / 2 - 64 / 2;
 		area.y = 20;
 		area.width = 64;
 		area.height = 64;
@@ -124,11 +147,11 @@ public class Player {
 	}
 
 	public void actualizarMovimiento() {
-		// Movimiento desde teclado con los operadores multiplicativos corregidos
+		// Movimiento desde teclado con operadores y tiempos corregidos
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT))  area.x -= velx * Gdx.graphics.getDeltaTime();
 		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) area.x += velx * Gdx.graphics.getDeltaTime();
 
-		// Que no se salga de los bordes izq y der (corregido el operador de resta)
+		// Límites de la pantalla
 		if(area.x < 0) area.x = 0;
 		if(area.x > 800 - 64) area.x = 800 - 64;
 	}
