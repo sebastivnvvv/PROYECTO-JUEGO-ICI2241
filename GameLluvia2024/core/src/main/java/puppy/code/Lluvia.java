@@ -37,17 +37,13 @@ public class Lluvia {
 
     private void crearGotaDeLluvia() {
         float x = MathUtils.random(0, 800 - 64);
-        boolean esViento = MathUtils.random() < 0.2f;
 
-        // Las gotas de viento siempre caen rectas; solo las de agua usan movimientos aleatorios
-        ComportamientoGota movimiento = esViento
-                ? new MovimientoRecto()
-                : FabricaMovimientos.crearMovimientoAleatorio();
+        ComportamientoGota movimiento = FabricaMovimientos.crearMovimientoAleatorio();
 
         Gota gota = new GotaBuilder()
                 .posicion(x, 480)
-                .tipo(esViento ? TipoGota.VIENTO : TipoGota.AGUA)
-                .textura(esViento ? texViento : texGota)
+                .tipo(TipoGota.AGUA)
+                .textura(texGota)
                 .sonido(dropSound)
                 .movimiento(movimiento)
                 .build();
@@ -73,8 +69,8 @@ public class Lluvia {
             if (gota.salioDePantalla()) {
                 gotas.removeIndex(i);
             } else if (gota.getArea().overlaps(player.getArea())) {
-                gota.procesarColision(player);
-                gotas.removeIndex(i);
+            	gota.procesarColision(player);
+            	gotas.removeIndex(i);
             }
         }
     }
