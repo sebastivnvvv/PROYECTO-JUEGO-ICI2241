@@ -68,7 +68,7 @@ public class GameLluvia extends ApplicationAdapter {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 
-		if (player.getVidas() <= 0){
+		if (!gameOver && player.getVidas() <= 0){
 			gameOver = true;
 			GestorPuntajes.getInstancia().guardarTiempo(tiempoSobrevivido);
 		}
@@ -111,6 +111,7 @@ public class GameLluvia extends ApplicationAdapter {
 		
 	}
 	private void reiniciarJuego() {
+		player.destruir();
 		tiempoSobrevivido = 0f;
 		gameOver = false;
 		Sound hurtSound = Gdx.audio.newSound(Gdx.files.internal("hurt.ogg"));

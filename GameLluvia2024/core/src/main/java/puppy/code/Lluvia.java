@@ -97,5 +97,7 @@ public class Lluvia {
     public void destruir() {
         dropSound.dispose();
         rainMusic.dispose();
+        texViento.dispose();
+        texGota.dispose();
     }
 }
