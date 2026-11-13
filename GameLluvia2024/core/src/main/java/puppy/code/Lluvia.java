@@ -37,30 +37,18 @@ public class Lluvia {
 
     private void crearGotaDeLluvia() {
         float x = MathUtils.random(0, 800 - 64);
-        GotaBuilder builder = new GotaBuilder().posicion(x, 480);
-        if (MathUtils.random(1, 10) < 2) {
-            builder.tipo(TipoGota.VIENTO)
-                   .textura(texViento)
-                   .sonido(dropSound)
-                   .movimiento(new MovimientoRecto());
-        } else {
-            ComportamientoGota movimiento;
-            float rand = MathUtils.random(); // un número entre 0 y 1
 
-            if (rand < 0.4f) {
-                movimiento = new MovimientoRecto();
-            } else if (rand < 0.8f) {
-                movimiento = new MovimientoZigzag(80f, 5f, 1f);
-            } else {
-                // ¡Aquí entra tu movimiento mixto dinámico!
-                movimiento = new MovimientoMixto();
-            }
+        ComportamientoGota movimiento = FabricaMovimientos.crearMovimientoAleatorio();
 
-            builder.tipo(TipoGota.AGUA)
-                    .textura(texGota)
-                    .movimiento(movimiento);
-        }
-        gotas.add(builder.build());
+        Gota gota = new GotaBuilder()
+                .posicion(x, 480)
+                .tipo(TipoGota.AGUA)
+                .textura(texGota)
+                .sonido(dropSound)
+                .movimiento(movimiento)
+                .build();
+
+        gotas.add(gota);
         lastDropTime = TimeUtils.nanoTime();
     }
 
