@@ -21,26 +21,44 @@ public abstract class Gota {
     public boolean salioDePantalla() {
         return area.y + 64 < 0;
     }
-    
+
+    /**
+     * Template Method: define el esqueleto fijo de lo que ocurre cuando
+     * una gota colisiona con el jugador. Es final para que las subclases
+     * no puedan alterar el orden de los pasos, solo su contenido.
+     */
     public final void procesarColision(Player player) {
-        aplicarEfecto(player);
-        reproducirSonido();
+        afectarVidas(player);
+        aplicarEfectoSecundario(player);
+        actualizarApariencia(player);
+        reproducirSonido(player);
     }
 
-    protected void reproducirSonido() {
-        // por defecto: sin sonido propio
+    // Paso 1 (abstracto): daña o cura al jugador.
+    protected abstract void afectarVidas(Player player);
+
+    // Paso 2 (abstracto): efecto adicional sobre el jugador.
+    protected abstract void aplicarEfectoSecundario(Player player);
+
+    // Paso 3 (hook): apariencia del jugador.
+    protected void actualizarApariencia(Player player) {
+        player.setPelosParados(false);
     }
 
-    /** Efecto que produce la gota sobre el jugador al colisionar. */
-    protected abstract void aplicarEfecto(Player player);
+    // Paso 4 (hook): sonido del impacto, por defecto, sin sonido.
+    protected void reproducirSonido(Player player) {
+        // sin sonido por defecto
+    }
 
     public Rectangle getArea() {
-    	return area; 
+        return area;
     }
-    public Texture getTextura() { 
-    	return textura; 
+
+    public Texture getTextura() {
+        return textura;
     }
+
     public ComportamientoGota getMovimiento() {
-    	return movimiento; 
-	}
+        return movimiento;
+    }
 }

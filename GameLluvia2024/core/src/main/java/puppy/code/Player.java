@@ -42,18 +42,34 @@ public class Player {
 			return puntos;
 	   }
 	   public  int getCargasViento() { return cargasViento;}
+
 	   public Rectangle getArea() {
 			return area;
 		}
 
-	   public void sumarViento(){
-		   if(cargasViento < 3){
-			   cargasViento++;
-		   }
-		   pelosParados = true;
-		   if(vidas < 3){
-			   vidas++;
-		   }
+	   public void modificarVidas(int cantidad) {
+		   vidas = MathUtils.clamp(vidas + cantidad, 0, 3);
+	   }
+
+	   public void agregarCargasViento(int cantidad) {
+		   cargasViento = MathUtils.clamp(cargasViento + cantidad, 0, 3);
+	   }
+
+	   public void activarHerido() {
+		   herido = true;
+		   tiempoHerido = tiempoHeridoMax;
+	   }
+
+	   public void setPelosParados(boolean pelosParados) {
+		   this.pelosParados = pelosParados;
+	   }
+
+	   public boolean isPelosParados() {
+		   return pelosParados;
+	   }
+
+	   public void reproducirSonidoHerido() {
+		   sonidoHerido.play();
 	   }
 
 	   public boolean usarBombaViento(){
@@ -70,13 +86,6 @@ public class Player {
 		      area.y = 20;
 		      area.width = 64;
 		      area.height = 64;
-	   }
-	   public void dañar() {
-		  vidas--;
-		  herido = true;
-		  tiempoHerido=tiempoHeridoMax;
-		  sonidoHerido.play();
-		  pelosParados = false;
 	   }
 
 	   public void dibujar(SpriteBatch batch) {
