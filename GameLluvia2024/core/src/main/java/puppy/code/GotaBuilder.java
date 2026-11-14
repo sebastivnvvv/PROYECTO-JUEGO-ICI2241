@@ -1,37 +1,55 @@
 package puppy.code;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
-public class GotaBuilder {
-    private float x = 0f;
-    private float y = 480f;
-    private TipoGota tipo = TipoGota.AGUA;
-    private Texture textura;
-    private Sound sonido;
-    private ComportamientoGota movimiento;
+/**
+ * Patrón Builder - Builder abstracto.
+ *
+ * Reúne los pasos de construcción comunes a todas las gotas (posición, textura
+ * y movimiento). Cada tipo de gota tiene su propio builder concreto, que agrega
+ * sus parámetros específicos y sabe qué producto crear. Así no se necesita
+ * ningún switch/if sobre el tipo: elegir el builder ya es elegir el producto.
+ *
+ * @param <B> tipo del builder concreto (permite encadenar métodos sin perder el tipo)
+ * @param <G> tipo de gota que produce
+ */
+public abstract class GotaBuilder<B extends GotaBuilder<B, G>, G extends Gota> {
+    protected float x = 0f;
+    protected float y = 480f;
+    protected Texture textura;
+    protected ComportamientoGota movimiento;
 
-    public GotaBuilder posicion(float x, float y) { this.x = x; this.y = y; return this; }
-    public GotaBuilder tipo(TipoGota tipo) { this.tipo = tipo; return this; }
-    public GotaBuilder textura(Texture textura) { this.textura = textura; return this; }
-    public GotaBuilder sonido(Sound sonido) { this.sonido = sonido; return this; }
-    public GotaBuilder movimiento(ComportamientoGota movimiento) { this.movimiento = movimiento; return this; }
+    /** Cada builder concreto devuelve this con su propio tipo. */
+    protected abstract B self();
 
-    public Gota build() {
+    public B posicion(float x, float y) {
+        this.x = x;
+        this.y = y;
+        return self();
+    }
+
+    public B textura(Texture textura) {
+        this.textura = textura;
+        return self();
+    }
+
+    public B movimiento(ComportamientoGota movimiento) {
+        this.movimiento = movimiento;
+        return self();
+    }
+
+    /** Construye el producto final. Lo implementa cada builder concreto. */
+    public abstract G build();
+
+    /** Validación común a todas las gotas. */
+    protected void validar() {
         if (textura == null) {
             throw new IllegalStateException("La gota necesita una textura");
         }
-        ComportamientoGota mov = (movimiento != null) ? movimiento : new MovimientoRecto();
+    }
 
-        switch (tipo) {
-            case VIENTO:
-                if (sonido == null) {
-                    throw new IllegalStateException("La gota de viento necesita un sonido");
-                }
-                return new GotaViento(x, y, textura, mov, sonido);
-            case AGUA:
-            default:
-                return new GotaAgua(x, y, textura, mov);
-        }
+    /** Si no se indicó movimiento, la gota cae en línea recta. */
+    protected ComportamientoGota movimientoFinal() {
+        return (movimiento != null) ? movimiento : new MovimientoRecto();
     }
 }

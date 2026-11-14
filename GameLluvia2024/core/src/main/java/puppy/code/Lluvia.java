@@ -16,12 +16,14 @@ public class Lluvia {
     private Texture texGota;
     private Sound dropSound;
     private Music rainMusic;
+    private DirectorGotas director;
 
     public Lluvia(Texture texViento, Texture texGota, Sound ss, Music mm) {
         rainMusic = mm;
         dropSound = ss;
         this.texViento = texViento;
         this.texGota = texGota;
+        this.director = new DirectorGotas(texGota, texViento, ss);
     }
 
     public void limpiarPantalla() {
@@ -37,20 +39,19 @@ public class Lluvia {
 
     private void crearGotaDeLluvia() {
         float x = MathUtils.random(0, 800 - 64);
+        float azar = MathUtils.random();
 
-        boolean esViento = MathUtils.random() < 0.2f;
-
-        ComportamientoGota movimiento = esViento
-                ? new MovimientoRecto()
-                : FabricaMovimientos.crearMovimientoAleatorio();
-
-        Gota gota = new GotaBuilder()
-                .posicion(x, 480)
-                .tipo(esViento ? TipoGota.VIENTO : TipoGota.AGUA)
-                .textura(esViento ? texViento : texGota)
-                .sonido(dropSound)
-                .movimiento(movimiento)
-                .build();
+        // Lluvia solo decide QUE variante cae; como se arma lo resuelve el Director/Builder.
+        Gota gota;
+        if (azar < 0.05f) {
+            gota = director.vientoPotente(x, 480);
+        } else if (azar < 0.20f) {
+            gota = director.vientoComun(x, 480);
+        } else if (azar < 0.30f) {
+            gota = director.aguaPesada(x, 480);
+        } else {
+            gota = director.aguaComun(x, 480, FabricaMovimientos.crearMovimientoAleatorio());
+        }
 
         gotas.add(gota);
         lastDropTime = TimeUtils.nanoTime();
