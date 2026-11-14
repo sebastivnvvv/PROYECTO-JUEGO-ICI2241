@@ -31,50 +31,32 @@ public class GameLluvia extends ApplicationAdapter {
 	private Texture pixel; // 1x1 blanco para dibujar rectángulos
 	private final GlyphLayout layout = new GlyphLayout();
 	private boolean nuevoRecord = false;
-	private static final Color FONDO  = new Color(0f, 0f, 0f, 0.55f);
-	private static final Color PANEL  = new Color(0.05f, 0.08f, 0.25f, 0.95f);
-	private static final Color BORDE  = new Color(0.4f, 0.7f, 1f, 1f);
+	private static final Color FONDO = new Color(0f, 0f, 0f, 0.55f);
+	private static final Color PANEL = new Color(0.05f, 0.08f, 0.25f, 0.95f);
+	private static final Color BORDE = new Color(0.4f, 0.7f, 1f, 1f);
 	private static final Color BRONCE = new Color(0.8f, 0.5f, 0.2f, 1f);
 
 	@Override
 	public void create() {
-		font = new BitmapFont(); // use libGDX's default Arial font
+		font = new BitmapFont();
 
-		// load the images for the droplet and the bucket, 64x64 pixels each
-		Sound hurtSound = Gdx.audio.newSound(Gdx.files.internal("hurt.ogg"));
-		Texture texSeco = new Texture(Gdx.files.internal("joven_seco.png"));
-		Texture texMojado1 = new Texture(Gdx.files.internal("joven_mojado1.png"));
-		Texture texMojado2 = new Texture(Gdx.files.internal("joven_mojado2.png"));
-		Texture texPelos = new Texture(Gdx.files.internal("joven_pelos_parados.png"));
-		player = new Player(texSeco, texMojado1, texMojado2, texPelos, hurtSound);
-
-		// load the drop sound effect and the rain background "music"
-		Texture texViento = new Texture(Gdx.files.internal("viento.png"));
-		Texture texGota = new Texture(Gdx.files.internal("drop.png"));
-
-		Sound dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
-
-		Music rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
-		lluvia = new Lluvia(texViento, texGota, dropSound, rainMusic);
-
-		// camera
+		// Cámara
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 		batch = new SpriteBatch();
 
-		// textura de 1x1 pixel blanco, usada para dibujar el panel del Game Over
+		// Textura para el panel de Game Over
 		Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
 		pm.setColor(Color.WHITE);
 		pm.fill();
 		pixel = new Texture(pm);
 		pm.dispose();
 
-		// creacion del tarro
-		player.crear();
-
-		// creacion de la lluvia
-		lluvia.crear();
+		// Crear los elementos del juego
+		crearJugador();
+		crearLluvia();
 	}
+
 
 	@Override
 	public void render() {
@@ -146,7 +128,7 @@ public class GameLluvia extends ApplicationAdapter {
 
 		texto("TOP 5", 1.3f, Color.CYAN, 295);
 		List<Float> top = g.getMejoresTiempos();
-		Color[] colores = { Color.GOLD, Color.LIGHT_GRAY, BRONCE, Color.WHITE, Color.WHITE };
+		Color[] colores = {Color.GOLD, Color.LIGHT_GRAY, BRONCE, Color.WHITE, Color.WHITE};
 		float y = 265;
 		for (int i = 0; i < top.size() && i < colores.length; i++) {
 			texto((i + 1) + ".  " + (int) (float) top.get(i) + "s", 1.1f, colores[i], y);
@@ -167,7 +149,9 @@ public class GameLluvia extends ApplicationAdapter {
 		}
 	}
 
-	/** Dibuja texto centrado horizontalmente en la pantalla. */
+	/**
+	 * Dibuja texto centrado horizontalmente en la pantalla.
+	 */
 	private void texto(String s, float escala, Color color, float y) {
 		font.getData().setScale(escala);
 		font.setColor(color);
@@ -177,7 +161,9 @@ public class GameLluvia extends ApplicationAdapter {
 		font.setColor(Color.WHITE);
 	}
 
-	/** Dibuja un rectángulo de color usando la textura de 1x1. */
+	/**
+	 * Dibuja un rectángulo de color usando la textura de 1x1.
+	 */
 	private void rect(float x, float y, float w, float h, Color color) {
 		batch.setColor(color);
 		batch.draw(pixel, x, y, w, h);
@@ -187,32 +173,66 @@ public class GameLluvia extends ApplicationAdapter {
 	// ------------------------------------------------------------------
 
 	private void reiniciarJuego() {
+		// Liberar los recursos anteriores
 		player.destruir();
+		lluvia.destruir();
+
+		// Reiniciar el estado de la partida
 		tiempoSobrevivido = 0f;
 		gameOver = false;
 		nuevoRecord = false;
-		Sound hurtSound = Gdx.audio.newSound(Gdx.files.internal("hurt.ogg"));
-		Texture texSeco = new Texture(Gdx.files.internal("joven_seco.png"));
-		Texture texMojado1 = new Texture(Gdx.files.internal("joven_mojado1.png"));
-		Texture texMojado2 = new Texture(Gdx.files.internal("joven_mojado2.png"));
-		Texture texPelos = new Texture(Gdx.files.internal("joven_pelos_parados.png"));
-		player = new Player(texSeco, texMojado1, texMojado2, texPelos, hurtSound);
-		player.crear();
-		Texture texViento = new Texture(Gdx.files.internal("viento.png"));
-		Texture texGota = new Texture(Gdx.files.internal("drop.png"));
-		Sound dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
-		Music rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
-		lluvia.destruir();
-		lluvia = new Lluvia(texViento, texGota, dropSound, rainMusic);
-		lluvia.crear();
+
+		// Volver a crear los elementos
+		crearJugador();
+		crearLluvia();
 	}
 
-	@Override
-	public void dispose() {
-		player.destruir();
-		lluvia.destruir();
-		batch.dispose();
-		font.dispose();
-		pixel.dispose();
+	private void crearJugador() {
+		Sound hurtSound = Gdx.audio.newSound(
+				Gdx.files.internal("hurt.ogg")
+		);
+
+		Texture texSeco = new Texture(
+				Gdx.files.internal("joven_seco.png")
+		);
+		Texture texMojado1 = new Texture(
+				Gdx.files.internal("joven_mojado1.png")
+		);
+		Texture texMojado2 = new Texture(
+				Gdx.files.internal("joven_mojado2.png")
+		);
+		Texture texPelos = new Texture(
+				Gdx.files.internal("joven_pelos_parados.png")
+		);
+
+		player = new Player(
+				texSeco, texMojado1, texMojado2,
+				texPelos, hurtSound
+		);
+
+		player.crear();
+	}
+
+	private void crearLluvia() {
+		Texture texViento = new Texture(
+				Gdx.files.internal("viento.png")
+		);
+		Texture texGota = new Texture(
+				Gdx.files.internal("drop.png")
+		);
+
+		Sound dropSound = Gdx.audio.newSound(
+				Gdx.files.internal("drop.wav")
+		);
+
+		Music rainMusic = Gdx.audio.newMusic(
+				Gdx.files.internal("rain.mp3")
+		);
+
+		lluvia = new Lluvia(
+				texViento, texGota, dropSound, rainMusic
+		);
+
+		lluvia.crear();
 	}
 }
