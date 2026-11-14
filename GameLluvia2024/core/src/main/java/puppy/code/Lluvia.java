@@ -38,12 +38,16 @@ public class Lluvia {
     private void crearGotaDeLluvia() {
         float x = MathUtils.random(0, 800 - 64);
 
-        ComportamientoGota movimiento = FabricaMovimientos.crearMovimientoAleatorio();
+        boolean esViento = MathUtils.random() < 0.2f;
+
+        ComportamientoGota movimiento = esViento
+                ? new MovimientoRecto()
+                : FabricaMovimientos.crearMovimientoAleatorio();
 
         Gota gota = new GotaBuilder()
                 .posicion(x, 480)
-                .tipo(TipoGota.AGUA)
-                .textura(texGota)
+                .tipo(esViento ? TipoGota.VIENTO : TipoGota.AGUA)
+                .textura(esViento ? texViento : texGota)
                 .sonido(dropSound)
                 .movimiento(movimiento)
                 .build();
